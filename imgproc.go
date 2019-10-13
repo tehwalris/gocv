@@ -1506,7 +1506,7 @@ const (
 	FloodFillMaskOnly = 1 << 17
 )
 
-// FloodFill fills a connected component with the given color
+// FloodFill fills a connected component with the given color.
 //
 // For further details, please see:
 // https://docs.opencv.org/master/d7/d1b/group__imgproc__misc.html#gaf1f55a048f8a45bc3383586e80b1f0d0
@@ -1539,5 +1539,5 @@ func FloodFill(img *Mat, mask *Mat, seedPoint image.Point, c color.RGBA, loDiff,
 		val4: C.double(upDiff.Val4),
 	}
 
-	return C.FloodFill(img.p, mask.p, sSeed, sColor, &rt, sLo, sUp, C.int(flags)), toRect(rt)
+	return int(C.FloodFill(img.p, mask.p, sSeed, sColor, &rt, sLo, sUp, C.int(flags))), toRect(rt)
 }

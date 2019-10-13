@@ -1510,5 +1510,39 @@ const (
 //
 // For further details, please see:
 // https://docs.opencv.org/master/d7/d1b/group__imgproc__misc.html#gaf1f55a048f8a45bc3383586e80b1f0d0
-func FloodFill(img *Mat, mask Mat, seedPoint image.Point, newVal color.Color, rect *image.Rectangle, loDiff, upDiff Scalar, flags FloodFillFlags) {
+func FloodFill(img *Mat, mask Mat, seed image.Point, c color.Color, rect *image.Rectangle, loDiff, upDiff Scalar, flags FloodFillFlags) {
+	sSeed := C.struct_Point {
+		x: C.int(seed.X),
+		y: C.int(seed.Y),
+	}
+
+	sColor := C.struct_Scalar{
+		val1: C.double(c.B),
+		val2: C.double(c.G),
+		val3: C.double(c.R),
+		val4: C.double(c.A),
+	}
+
+	cRect := C.struct_Rect{
+		x:      C.int(r.Min.X),
+		y:      C.int(r.Min.Y),
+		width:  C.int(r.Size().X),
+		height: C.int(r.Size().Y),
+	}
+
+	sLo := C.struct_Scalar{
+		val1: C.double(loDiff.Val1),
+		val2: C.double(loDiff.Val2),
+		val3: C.double(loDiff.Val3),
+		val4: C.double(loDiff.Val4),
+	}
+
+	sUp := C.struct_Scalar{
+		val1: C.double(upDiff.Val1),
+		val2: C.double(upDiff.Val2),
+		val3: C.double(upDiff.Val3),
+		val4: C.double(upDiff.Val4),
+	}
+
+	c.FloodFill(img.p, sSeed, sColor, cRect, sLo, sUp, C.int(flags))
 }

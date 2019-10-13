@@ -98,6 +98,7 @@ CLAHE CLAHE_Create();
 CLAHE CLAHE_CreateWithParams(double clipLimit, Size tileGridSize);
 void CLAHE_Close(CLAHE c);
 void CLAHE_Apply(CLAHE c, Mat src, Mat dst);
+int FloodFill(Mat img, Mat mask, Point seedPoint, Scalar color, Rect* rect, Scalar loDiff, Scalar upDiff, int flags);
 
 #ifdef __cplusplus
 }

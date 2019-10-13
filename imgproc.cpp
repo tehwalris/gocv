@@ -524,3 +524,26 @@ void CLAHE_Close(CLAHE c) {
 void CLAHE_Apply(CLAHE c, Mat src, Mat dst) {
     (*c)->apply(*src, *dst);
 }
+
+int FloodFill(Mat img, Mat mask, Point seedPoint, Scalar color, Rect* rect, Scalar loDiff, Scalar upDiff, int flags) {
+    cv::Point seed = cv::Point(seedPoint.x, seedPoint.y);
+    cv::Scalar c = cv::Scalar(color.val1, color.val2, color.val3, color.val4);
+    cv::Scalar lo = cv::Scalar(loDiff.val1, loDiff.val2, loDiff.val3, loDiff.val4);
+    cv::Scalar up = cv::Scalar(upDiff.val1, upDiff.val2, upDiff.val3, upDiff.val4);
+    cv::Rect r = cv::Rect(rect->x, rect->y, rect->width, rect->height);
+    int ret = cv::floodFill(
+        *img,
+        *mask,
+        seed,
+        c,
+        &r,
+        lo,
+        up,
+        flags
+    );
+    rect->x = r.x;
+    rect->y = r.y;
+    rect->width = r.width;
+    rect->height = r.height;
+    return ret;
+}

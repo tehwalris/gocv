@@ -1502,7 +1502,7 @@ const (
 	// FloodFillFixedRange uses the difference to the seed pixel instead of to neighbor pixels.
 	FloodFillFixedRange FloodFillFlags = 1 << 16
 
-	// FloodFillMaskOnly does not change the image if set (only fills the mask).
+	// FloodFillMaskOnly does not change the image if set (only writes to the mask).
 	FloodFillMaskOnly = 1 << 17
 )
 
@@ -1510,10 +1510,10 @@ const (
 //
 // For further details, please see:
 // https://docs.opencv.org/master/d7/d1b/group__imgproc__misc.html#gaf1f55a048f8a45bc3383586e80b1f0d0
-func FloodFill(img *Mat, mask Mat, seed image.Point, c color.Color, rect *image.Rectangle, loDiff, upDiff Scalar, flags FloodFillFlags) {
-	sSeed := C.struct_Point {
-		x: C.int(seed.X),
-		y: C.int(seed.Y),
+func FloodFill(img *Mat, mask *Mat, seedPoint image.Point, c color.RGBA, loDiff, upDiff Scalar, flags FloodFillFlags) (int, image.Rectangle) {
+	sSeed := C.struct_Point{
+		x: C.int(seedPoint.X),
+		y: C.int(seedPoint.Y),
 	}
 
 	sColor := C.struct_Scalar{
@@ -1523,12 +1523,7 @@ func FloodFill(img *Mat, mask Mat, seed image.Point, c color.Color, rect *image.
 		val4: C.double(c.A),
 	}
 
-	cRect := C.struct_Rect{
-		x:      C.int(r.Min.X),
-		y:      C.int(r.Min.Y),
-		width:  C.int(r.Size().X),
-		height: C.int(r.Size().Y),
-	}
+	rt := C.struct_Rect{}
 
 	sLo := C.struct_Scalar{
 		val1: C.double(loDiff.Val1),
@@ -1544,5 +1539,5 @@ func FloodFill(img *Mat, mask Mat, seed image.Point, c color.Color, rect *image.
 		val4: C.double(upDiff.Val4),
 	}
 
-	c.FloodFill(img.p, sSeed, sColor, cRect, sLo, sUp, C.int(flags))
+	return C.FloodFill(img.p, mask.p, sSeed, sColor, &rt, sLo, sUp, C.int(flags)), toRect(rt)
 }

@@ -1494,3 +1494,21 @@ func (c *CLAHE) Close() error {
 func (c *CLAHE) Apply(src Mat, dst *Mat) {
 	C.CLAHE_Apply((C.CLAHE)(c.p), src.p, dst.p)
 }
+
+// FloodFillFlags control the behavior of the flood fill algorithm.
+type FloodFillFlags int
+
+const (
+	// FloodFillFixedRange uses the difference to the seed pixel instead of to neighbor pixels.
+	FloodFillFixedRange FloodFillFlags = 1 << 16
+
+	// FloodFillMaskOnly does not change the image if set (only fills the mask).
+	FloodFillMaskOnly = 1 << 17
+)
+
+// FloodFill fills a connected component with the given color
+//
+// For further details, please see:
+// https://docs.opencv.org/master/d7/d1b/group__imgproc__misc.html#gaf1f55a048f8a45bc3383586e80b1f0d0
+func FloodFill(img *Mat, mask Mat, seedPoint image.Point, newVal color.Color, rect *image.Rectangle, loDiff, upDiff Scalar, flags FloodFillFlags) {
+}
